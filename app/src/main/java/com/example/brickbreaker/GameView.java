@@ -29,7 +29,7 @@ public class GameView extends View {
     float TEXT_SIZE = 150;
     float paddleX, paddleY;
     float oldX, oldPaddleX;
-    int point = 0;
+    int points = 0;
     int life = 3;
     Bitmap ball, paddle;
     int dWidth, dHeight;
@@ -89,16 +89,16 @@ public class GameView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawColor(Color.BLACK);
+        canvas.drawColor(Color.GRAY);
         ballX += velocity.getX();
         ballY += velocity.getY();
-        if((ballX>=dWidth-ball.getWidth())||ballX<=0){ //when you hit a wall
+        if((ballX > dWidth - ball.getWidth()) || ballX <= 0){ //when you hit a wall
             velocity.setX(velocity.getX() * -1);
         }
         if(ballY<=0){
             velocity.setY(velocity.getY() * -1);
         }
-        if(ballY > paddleX + paddle.getHeight()) {
+        if(ballY > paddleY + paddle.getHeight()) {
             ballX = 1 + random.nextInt(dWidth - ball.getWidth() - 1);
             ballY = dHeight / 3;
             if (mpMiss != null) {
@@ -130,11 +130,11 @@ public class GameView extends View {
 
             }
         }
-        canvas.drawText("" + point, 20, TEXT_SIZE, textPaint);
+        canvas.drawText("" + points, 20, TEXT_SIZE, textPaint);
         if(life ==2){
             healthPaint.setColor(Color.YELLOW);
         }else if(life==1){
-            life+=1;
+            //life+=1;
             healthPaint.setColor(Color.RED);
         }
         canvas.drawRect(dWidth-200, 30, dWidth - 200 + 60 * life, 80, healthPaint);
@@ -149,7 +149,7 @@ public class GameView extends View {
                     }
                     velocity.setY((velocity.getY() + 1) * -1);
                     bricks[i].setInvisible();
-                    point++;
+                    points++;
                     brokenBricks++;
                     if(brokenBricks == 24){
                         launchGameOver();
@@ -196,7 +196,7 @@ public class GameView extends View {
     private void launchGameOver() {
         handler.removeCallbacksAndMessages(null);
         Intent intent = new Intent(context, GameOver.class);
-        intent.putExtra("points", point);
+        intent.putExtra("points", points);
         context.startActivity(intent);
         ((Activity) context).finish();
     }
